@@ -1,0 +1,33 @@
+# Refer to https://github.com/blueobjx/okta-oauth2-proxy-statichtml
+
+services:
+
+  web:
+    image: quay.io/oauth2-proxy/oauth2-proxy
+
+    ports:
+      - "${PORT}:4180"
+
+    environment:
+      OAUTH2_PROXY_PROVIDER: oidc
+      OAUTH2_PROXY_OIDC_ISSUER_URL: "${ISSUER}"
+
+      OAUTH2_PROXY_UPSTREAMS: "file:///var/html/#/"
+      OAUTH2_PROXY_HTTP_ADDRESS: ":4180"
+      OAUTH2_PROXY_EMAIL_DOMAINS: "*"
+      OAUTH2_PROXY_SCOPE: "openid profile email"
+      OAUTH2_PROXY_SESSION_COOKIE_MINIMAL: true
+      OAUTH2_PROXY_SKIP_PROVIDER_BUTTON: true
+      OAUTH2_PROXY_REDIRECT_URL: "${REDIRECT_HOST}/oauth2/callback"
+
+      OAUTH2_PROXY_CLIENT_ID: "${CLIENT_ID}"
+      OAUTH2_PROXY_CLIENT_SECRET: "${CLIENT_SECRET}"
+
+      OAUTH2_PROXY_COOKIE_SECRET: "${COOKIE_SECRET}"
+      OAUTH2_PROXY_COOKIE_SECURE: false
+      OAUTH2_PROXY_COOKIE_CSRF_EXPIRE: 5m
+      OAUTH2_PROXY_COOKIE_CSRF_PER_REQUEST: true
+      OAUTH2_PROXY_COOKIE_EXPIRE: 0h0m30s
+
+    volumes:
+      - ./static-html:/var/html
